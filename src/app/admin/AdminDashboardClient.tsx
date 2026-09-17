@@ -40,6 +40,18 @@ export default function AdminDashboardClient({ adminEmail }: { adminEmail: strin
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [expandedMetaId, setExpandedMetaId] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<ConfessionRecord | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+
+  const showToast = (message: string, type: "success" | "error" = "success") => {
+    setToast({ message, type });
+  };
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 3500);
+    return () => clearTimeout(timer);
+  }, [toast]);
 
   const fetchAdminConfessions = useCallback(async () => {
     try {
@@ -55,9 +67,13 @@ export default function AdminDashboardClient({ adminEmail }: { adminEmail: strin
         const data = await res.json();
         setConfessions(data.confessions || []);
         if (data.stats) setStats(data.stats);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        showToast(data.error || "Failed to load confessions", "error");
       }
     } catch (err) {
       console.error("Error fetching admin confessions:", err);
+      showToast("Network error fetching confessions", "error");
     } finally {
       setLoading(false);
     }
@@ -81,18 +97,25 @@ export default function AdminDashboardClient({ adminEmail }: { adminEmail: strin
         setConfessions((prev) =>
           prev.map((c) => (c._id === id ? { ...c, status: newStatus } : c))
         );
+        showToast(`Confession marked as ${newStatus}!`, "success");
         // Refresh counts
         fetchAdminConfessions();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        showToast(data.error || "Failed to update confession", "error");
       }
     } catch (err) {
       console.error("Error updating status:", err);
+      showToast("Network error updating status", "error");
     } finally {
       setActionLoading(null);
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to permanently delete this confession?")) return;
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+    const id = deleteTarget._id;
+    const targetStatus = deleteTarget.status;
     try {
       setActionLoading(id);
       const res = await fetch(`/api/admin/confessions/${id}`, {
@@ -101,10 +124,21 @@ export default function AdminDashboardClient({ adminEmail }: { adminEmail: strin
 
       if (res.ok) {
         setConfessions((prev) => prev.filter((c) => c._id !== id));
+        setStats((prev) => ({
+          ...prev,
+          [targetStatus]: Math.max(0, prev[targetStatus] - 1),
+          total: Math.max(0, prev.total - 1),
+        }));
+        showToast("Confession permanently deleted.", "success");
+        setDeleteTarget(null);
         fetchAdminConfessions();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        showToast(data.error || "Failed to delete confession", "error");
       }
     } catch (err) {
       console.error("Error deleting confession:", err);
+      showToast("Network error deleting confession", "error");
     } finally {
       setActionLoading(null);
     }
@@ -393,17 +427,102 @@ export default function AdminDashboardClient({ adminEmail }: { adminEmail: strin
                     )}
 
                     <button
-                      onClick={() => handleDelete(item._id)}
+                      onClick={() => setDeleteTarget(item)}
                       disabled={isBusy}
-                      className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-colors disabled:opacity-50 cursor-pointer"
+                      className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-all disabled:opacity-50 cursor-pointer flex items-center gap-1 hover:scale-105 active:scale-95"
                       title="Permanently Delete"
                     >
-                      🗑️
+                      <span>🗑️</span>
+                      <span className="hidden sm:inline font-medium">Delete</span>
                     </button>
                   </div>
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {/* Custom In-App Delete Confirmation Modal */}
+        {deleteTarget && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
+            onClick={() => !actionLoading && setDeleteTarget(null)}
+          >
+            <div 
+              className="w-full max-w-md bg-slate-900 border-2 border-rose-500/30 rounded-2xl p-6 shadow-2xl space-y-5 text-slate-100"
+              role="dialog"
+              aria-modal="true"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-xl flex-shrink-0">
+                  ⚠️
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">Permanently Delete?</h3>
+                  <p className="text-xs text-slate-400 mt-1">
+                    This confession will be permanently removed from MongoDB Atlas. This action cannot be undone.
+                  </p>
+                </div>
+              </div>
+
+              {/* Snippet preview */}
+              <div 
+                className="p-3.5 rounded-xl border border-black/15 text-slate-950 font-medium text-xs sm:text-sm leading-relaxed max-h-36 overflow-y-auto shadow-inner"
+                style={{ backgroundColor: deleteTarget.stickyColor || "#FFF9C4" }}
+              >
+                &ldquo;{deleteTarget.confession}&rdquo;
+                {deleteTarget.imageUrl && (
+                  <div className="mt-2 text-[10px] font-mono text-slate-800 font-bold bg-black/10 px-2 py-0.5 rounded w-fit">
+                    📸 Includes attached photo
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => !actionLoading && setDeleteTarget(null)}
+                  disabled={!!actionLoading}
+                  className="px-4 py-2 text-xs font-semibold rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition-colors disabled:opacity-50 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleConfirmDelete}
+                  disabled={!!actionLoading}
+                  className="px-4 py-2 text-xs font-bold rounded-xl bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-600/30 transition-all disabled:opacity-50 cursor-pointer flex items-center gap-2"
+                >
+                  {actionLoading === deleteTarget._id ? (
+                    <>
+                      <span className="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <span>🗑️ Permanently Delete</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Global Toast Notification */}
+        {toast && (
+          <div className="fixed bottom-5 right-5 z-50 pointer-events-none animate-in slide-in-from-bottom-5 fade-in duration-200">
+            <div
+              className={`px-4 py-3 rounded-xl border shadow-2xl flex items-center gap-2.5 text-xs font-semibold backdrop-blur-md ${
+                toast.type === "success"
+                  ? "bg-emerald-950/90 border-emerald-500/40 text-emerald-200 shadow-emerald-950/50"
+                  : "bg-rose-950/90 border-rose-500/40 text-rose-200 shadow-rose-950/50"
+              }`}
+            >
+              <span className="text-sm">{toast.type === "success" ? "✓" : "⚠️"}</span>
+              <span>{toast.message}</span>
+            </div>
           </div>
         )}
       </div>

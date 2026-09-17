@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 import dbConnect from "@/lib/mongodb";
 import Confession from "@/models/Confession";
 import { adminActionSchema } from "@/lib/validation";
@@ -10,6 +11,13 @@ export async function PATCH(
 ) {
   try {
     const { id } = await ctx.params;
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Confession ID is required" },
+        { status: 400 }
+      );
+    }
 
     const body = await request.json();
     const parsed = adminActionSchema.safeParse(body);
@@ -23,14 +31,26 @@ export async function PATCH(
 
     await dbConnect();
 
-    const confession = await Confession.findByIdAndUpdate(
-      id,
-      {
-        status: parsed.data.status,
-        moderationReason: parsed.data.reason || null,
-      },
-      { new: true }
-    );
+    let confession = null;
+    if (mongoose.isValidObjectId(id)) {
+      confession = await Confession.findByIdAndUpdate(
+        id,
+        {
+          status: parsed.data.status,
+          moderationReason: parsed.data.reason || null,
+        },
+        { new: true }
+      );
+    } else {
+      confession = await Confession.findOneAndUpdate(
+        { _id: id },
+        {
+          status: parsed.data.status,
+          moderationReason: parsed.data.reason || null,
+        },
+        { new: true }
+      );
+    }
 
     if (!confession) {
       return NextResponse.json(
@@ -50,7 +70,7 @@ export async function PATCH(
   } catch (error) {
     console.error("Error updating confession:", error);
     return NextResponse.json(
-      { error: "Failed to update confession" },
+      { error: error instanceof Error ? error.message : "Failed to update confession" },
       { status: 500 }
     );
   }
@@ -64,9 +84,27 @@ export async function DELETE(
   try {
     const { id } = await ctx.params;
 
+    if (!id) {
+      return NextResponse.json(
+        { error: "Confession ID is required" },
+        { status: 400 }
+      );
+    }
+
     await dbConnect();
 
-    const confession = await Confession.findByIdAndDelete(id);
+    let confession = null;
+    if (mongoose.isValidObjectId(id)) {
+      confession = await Confession.findByIdAndDelete(id);
+    } else {
+      const result = await Confession.deleteOne({ _id: id });
+      if (result.deletedCount > 0) {
+        return NextResponse.json({
+          success: true,
+          message: "Confession deleted",
+        });
+      }
+    }
 
     if (!confession) {
       return NextResponse.json(
@@ -82,8 +120,9 @@ export async function DELETE(
   } catch (error) {
     console.error("Error deleting confession:", error);
     return NextResponse.json(
-      { error: "Failed to delete confession" },
+      { error: error instanceof Error ? error.message : "Failed to delete confession" },
       { status: 500 }
     );
   }
 }
+

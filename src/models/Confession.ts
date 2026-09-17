@@ -76,6 +76,7 @@ const ConfessionSchema = new Schema<IConfession>(
   },
   {
     timestamps: true,
+    collection: "confessions",
   }
 );
 
