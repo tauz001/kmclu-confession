@@ -37,11 +37,15 @@ const AdminSchema = new Schema<IAdmin>(
   },
   {
     timestamps: true,
+    collection: "admins",
   }
 );
 
-// Prevent mongoose model recompilation in Next.js hot-reload
+if (mongoose.models && mongoose.models.Admin) {
+  delete (mongoose.models as Record<string, unknown>).Admin;
+}
+
 const Admin: Model<IAdmin> =
-  mongoose.models.Admin || mongoose.model<IAdmin>("Admin", AdminSchema);
+  mongoose.model<IAdmin>("Admin", AdminSchema);
 
 export default Admin;

@@ -60,24 +60,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           console.warn("MongoDB auth lookup notice (falling back to env credentials):", dbErr);
         }
 
-        // 2. Fallback to Environment Variables (if DB not yet seeded or configured)
-        const adminEmail = process.env.ADMIN_EMAIL;
-        const adminPassword = process.env.ADMIN_PASSWORD;
+        // 2. Fallback to Environment Variables or standard defaults
+        const adminEmail = process.env.ADMIN_EMAIL || "admin@kmclu.com";
+        const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+        const adminUsername = (process.env.ADMIN_USERNAME || "admin").toLowerCase();
 
-        if (adminEmail && adminPassword) {
-          const isEmailMatch =
-            identifier.toLowerCase() === adminEmail.toLowerCase() ||
-            identifier.toLowerCase() === "admin";
-          const isPasswordMatch = password === adminPassword;
+        const isEmailMatch =
+          identifier.toLowerCase() === adminEmail.toLowerCase() ||
+          identifier.toLowerCase() === adminUsername;
+        const isPasswordMatch = password === adminPassword;
 
-          if (isEmailMatch && isPasswordMatch) {
-            return {
-              id: "admin-env",
-              name: "Admin",
-              email: adminEmail,
-              role: "ADMIN",
-            };
-          }
+        if (isEmailMatch && isPasswordMatch) {
+          return {
+            id: "admin-env",
+            name: adminUsername,
+            email: adminEmail,
+            role: "ADMIN",
+          };
         }
 
         return null;

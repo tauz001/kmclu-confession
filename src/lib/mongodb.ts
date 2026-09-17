@@ -37,6 +37,7 @@ async function dbConnect(): Promise<typeof mongoose> {
     const uri = getMongoUri();
     const opts = {
       bufferCommands: false,
+      serverSelectionTimeoutMS: 8000,
     };
 
     cached.promise = mongoose
