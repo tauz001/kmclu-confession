@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export default function WallPosters() {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden select-none z-0">
+    <div className="pointer-events-none absolute inset-0 overflow-hidden select-none z-0 hidden xl:block">
       {/* =========================================================
           POSTER 1: TOP-LEFT — RETRO GIG / SOUNDS FLYER
           ========================================================= */}

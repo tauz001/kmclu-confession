@@ -101,6 +101,20 @@ export default function ConfessionWall() {
     fetchConfessions();
   }, [fetchConfessions]);
 
+  // Open note modal automatically if shared URL ?note=<id> is present
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const noteId = params.get("note");
+      if (noteId && confessions.length > 0) {
+        const found = confessions.find((c) => c._id === noteId);
+        if (found) {
+          setSelectedNote(found);
+        }
+      }
+    }
+  }, [confessions]);
+
   // Load more pagination
   const handleLoadMore = async () => {
     if (!nextCursor || loadingMore) return;
@@ -139,19 +153,19 @@ export default function ConfessionWall() {
   }, [confessions, searchQuery, activeFilter]);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div className="w-full max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-6 sm:py-10 md:py-12">
       {/* Hero Header */}
-      <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+      <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
         {/* Funky Animated Sticker Badge */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full funky-sticker-badge text-pink-200 text-xs font-bold mb-4 -rotate-1 shadow-md shadow-pink-500/10"
+          className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full funky-sticker-badge text-pink-200 text-[10px] sm:text-xs font-bold mb-3 sm:mb-4 -rotate-1 shadow-md shadow-pink-500/10 flex-wrap justify-center"
         >
-          <span className="text-sm">✨</span>
+          <span className="text-xs sm:text-sm">✨</span>
           <span>KMCLU UNFILTERED WHISPERS</span>
-          <span className="text-pink-400/60">•</span>
-          <span className="text-amber-200/90 font-mono text-[11px]">100% No Identity</span>
+          <span className="text-pink-400/60 hidden xs:inline">•</span>
+          <span className="text-amber-200/90 font-mono text-[10px] sm:text-[11px] whitespace-nowrap">100% No Identity</span>
         </motion.div>
 
         {/* Main Title */}
@@ -159,7 +173,7 @@ export default function ConfessionWall() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight"
+          className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight px-1"
         >
           <span className="block text-purple-100">Say It. Leave It.</span>
           <span className="block bg-gradient-to-r from-amber-300 via-pink-400 to-purple-400 bg-clip-text text-transparent">
@@ -171,7 +185,7 @@ export default function ConfessionWall() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="mt-4 text-sm sm:text-base text-purple-200/70 max-w-xl mx-auto leading-relaxed"
+          className="mt-3 sm:mt-4 text-xs sm:text-sm md:text-base text-purple-200/70 max-w-xl mx-auto leading-relaxed px-2"
         >
           An eccentric digital corkboard of secrets, crushes, regrets, and midnight campus gossip. Click any note to peek inside and stamp reactions.
         </motion.p>
@@ -181,22 +195,24 @@ export default function ConfessionWall() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3 }}
-          className="mt-7 flex items-center justify-center gap-4"
+          className="mt-6 sm:mt-7 flex items-center justify-center gap-4 px-2"
         >
-          <Link href="/confess">
-            <button className="btn-confess-main px-8 py-4 text-base sm:text-lg">
-              <span className="text-2xl">✍️</span>
+          <Link href="/confess" className="w-full sm:w-auto flex justify-center">
+            <button className="btn-confess-main w-full sm:w-auto px-5 sm:px-8 py-3 sm:py-4 text-sm sm:text-base md:text-lg flex-wrap">
+              <span className="text-xl sm:text-2xl">✍️</span>
               <span>Stick Your Confession</span>
-              <span className="text-xs bg-black text-[#bef264] px-2 py-0.5 rounded-sm font-mono font-bold">100% ANONYMOUS</span>
+              <span className="text-[10px] sm:text-xs bg-black text-[#bef264] px-1.5 sm:px-2 py-0.5 rounded-sm font-mono font-bold whitespace-nowrap">
+                100% ANONYMOUS
+              </span>
             </button>
           </Link>
         </motion.div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="mb-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#1f1b29] p-3.5 rounded-2xl border-2 border-black shadow-[4px_4px_0px_#000]">
+      <div className="mb-6 sm:mb-8 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4 bg-[#1f1b29] p-3 sm:p-3.5 rounded-2xl border-2 border-black shadow-[4px_4px_0px_#000]">
         {/* Search Input */}
-        <div className="relative w-full sm:w-80">
+        <div className="relative w-full md:w-80">
           <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-slate-400 text-sm">
             🔍
           </span>
@@ -205,7 +221,7 @@ export default function ConfessionWall() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search whispers..."
-            className="w-full pl-9 pr-4 py-2.5 text-xs sm:text-sm bg-[#120e1a] border-2 border-black rounded-xl text-amber-50 placeholder-slate-500 focus:outline-none focus:border-[#bef264] focus:ring-1 focus:ring-[#bef264] transition-all font-mono"
+            className="w-full pl-9 pr-8 py-2 sm:py-2.5 text-xs sm:text-sm bg-[#120e1a] border-2 border-black rounded-xl text-amber-50 placeholder-slate-500 focus:outline-none focus:border-[#bef264] focus:ring-1 focus:ring-[#bef264] transition-all font-mono"
           />
           {searchQuery && (
             <button
@@ -218,7 +234,7 @@ export default function ConfessionWall() {
         </div>
 
         {/* Filter Tabs with Distinct Funky Button Colors */}
-        <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+        <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto no-scrollbar touch-scroll pb-1 md:pb-0">
           {(
             [
               { key: "all", label: "All Whispers", color: "btn-funky-lime" },
@@ -231,7 +247,7 @@ export default function ConfessionWall() {
               <button
                 key={tab.key}
                 onClick={() => setActiveFilter(tab.key)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-black whitespace-nowrap uppercase tracking-wider transition-all cursor-pointer ${
+                className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-black whitespace-nowrap uppercase tracking-wider transition-all cursor-pointer flex-shrink-0 ${
                   isActive
                     ? `${tab.color} scale-105`
                     : "bg-[#14101d] text-slate-300 border-2 border-black/60 hover:border-black hover:text-white"
@@ -246,7 +262,7 @@ export default function ConfessionWall() {
 
       {/* Confession Wall Grid */}
       {filteredConfessions.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-7 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-7 items-start">
           {filteredConfessions.map((item, idx) => (
             <StickyNote
               key={item._id || idx}

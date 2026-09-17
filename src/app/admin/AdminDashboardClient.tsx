@@ -146,48 +146,48 @@ export default function AdminDashboardClient({ adminEmail }: { adminEmail: strin
         </header>
 
         {/* KPI Stats Overview */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20">
-            <div className="text-xs font-semibold text-amber-400 uppercase tracking-wider">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
+          <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-amber-500/10 border border-amber-500/20">
+            <div className="text-[10px] sm:text-xs font-semibold text-amber-400 uppercase tracking-wider truncate">
               Pending Review
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-white mt-1">
+            <div className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mt-1">
               {stats.pending}
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
-            <div className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">
+          <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
+            <div className="text-[10px] sm:text-xs font-semibold text-emerald-400 uppercase tracking-wider truncate">
               Approved
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-white mt-1">
+            <div className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mt-1">
               {stats.approved}
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20">
-            <div className="text-xs font-semibold text-rose-400 uppercase tracking-wider">
+          <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-rose-500/10 border border-rose-500/20">
+            <div className="text-[10px] sm:text-xs font-semibold text-rose-400 uppercase tracking-wider truncate">
               Rejected
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-white mt-1">
+            <div className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mt-1">
               {stats.rejected}
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-800/50 border border-white/10">
-            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              Total Submissions
+          <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-800/50 border border-white/10">
+            <div className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider truncate">
+              Total
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-white mt-1">
+            <div className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mt-1">
               {stats.total}
             </div>
           </div>
         </div>
 
         {/* Filter and Search */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-slate-900/60 border border-white/5">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-900/60 border border-white/5">
           {/* Status Tabs */}
-          <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
+          <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto overflow-x-auto no-scrollbar touch-scroll pb-1 sm:pb-0">
             {(
               [
                 { key: "pending", label: "Pending Review" },
@@ -199,7 +199,7 @@ export default function AdminDashboardClient({ adminEmail }: { adminEmail: strin
               <button
                 key={tab.key}
                 onClick={() => setStatusFilter(tab.key)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                className={`px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex-shrink-0 cursor-pointer ${
                   statusFilter === tab.key
                     ? "bg-amber-400 text-slate-950 shadow-md font-bold"
                     : "text-slate-400 hover:text-white hover:bg-white/5"
@@ -361,7 +361,7 @@ export default function AdminDashboardClient({ adminEmail }: { adminEmail: strin
                             <span className="text-slate-500">Language:</span>{" "}
                             <span>{item.metadata.language || "N/A"}</span>
                           </div>
-                          <div className="col-span-full truncate">
+                          <div className="col-span-full break-all">
                             <span className="text-slate-500">User-Agent:</span>{" "}
                             <span className="text-slate-400 text-[10px]">{item.metadata.userAgent || "N/A"}</span>
                           </div>
@@ -371,12 +371,12 @@ export default function AdminDashboardClient({ adminEmail }: { adminEmail: strin
                   </div>
 
                   {/* Right: Actions */}
-                  <div className="flex items-center gap-2 self-end md:self-center flex-shrink-0">
+                  <div className="flex items-center gap-2 self-start sm:self-center flex-wrap sm:flex-nowrap flex-shrink-0 pt-2 sm:pt-0">
                     {!isApproved && (
                       <button
                         onClick={() => handleUpdateStatus(item._id, "approved")}
                         disabled={isBusy}
-                        className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition-colors disabled:opacity-50"
+                        className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition-colors disabled:opacity-50 cursor-pointer"
                       >
                         ✓ Approve
                       </button>
@@ -386,7 +386,7 @@ export default function AdminDashboardClient({ adminEmail }: { adminEmail: strin
                       <button
                         onClick={() => handleUpdateStatus(item._id, "rejected")}
                         disabled={isBusy}
-                        className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition-colors disabled:opacity-50"
+                        className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition-colors disabled:opacity-50 cursor-pointer"
                       >
                         ✕ Reject
                       </button>
@@ -395,7 +395,7 @@ export default function AdminDashboardClient({ adminEmail }: { adminEmail: strin
                     <button
                       onClick={() => handleDelete(item._id)}
                       disabled={isBusy}
-                      className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-colors disabled:opacity-50"
+                      className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-colors disabled:opacity-50 cursor-pointer"
                       title="Permanently Delete"
                     >
                       🗑️

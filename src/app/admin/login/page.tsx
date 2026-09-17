@@ -44,7 +44,7 @@ export default function AdminLoginPage() {
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="w-full max-w-md p-8 rounded-3xl bg-slate-900/90 border border-white/10 backdrop-blur-xl shadow-2xl"
+        className="w-full max-w-md p-5 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-900/90 border border-white/10 backdrop-blur-xl shadow-2xl"
       >
         {/* Header */}
         <div className="text-center mb-8">

@@ -57,7 +57,7 @@ export default function MagneticButton({
       disabled={disabled || loading}
       whileHover={disabled || loading ? {} : { scale: 1.04 }}
       whileTap={disabled || loading ? {} : { scale: 0.96 }}
-      className={`btn-confess-main px-8 py-4 text-base sm:text-lg select-none disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+      className={`btn-confess-main w-full sm:w-auto px-5 sm:px-8 py-3 sm:py-4 text-sm sm:text-base md:text-lg select-none disabled:opacity-50 disabled:cursor-not-allowed flex-wrap ${className}`}
     >
       {loading ? (
         <div className="flex items-center gap-2">

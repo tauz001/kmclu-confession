@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function ConfessPage() {
   return (
-    <main className="h-[100dvh] w-full flex items-center justify-center overflow-hidden">
+    <main className="min-h-[100dvh] min-h-dvh w-full flex items-center justify-center overflow-y-auto py-2 sm:py-6">
       <ConfessForm />
     </main>
   );

@@ -134,19 +134,19 @@ export default function ConfessForm() {
   };
 
   return (
-    <div className="h-[100dvh] w-full flex flex-col justify-between px-4 sm:px-6 py-4 sm:py-6 overflow-hidden max-w-2xl mx-auto">
+    <div className="w-full flex flex-col justify-between px-3.5 sm:px-6 py-3 sm:py-6 min-h-[92dvh] max-w-2xl mx-auto">
       {/* Top Bar: Nav link + Animated Heading */}
       <div className="flex-shrink-0 text-center">
         <div className="flex items-center justify-between mb-2">
           <Link
             href="/"
-            className="btn-funky-cyan px-3 py-1 text-xs font-black uppercase rounded-lg flex items-center gap-1 cursor-pointer"
+            className="btn-funky-cyan px-2.5 sm:px-3 py-1 text-xs font-black uppercase rounded-lg flex items-center gap-1 cursor-pointer"
           >
             <span>←</span>
-            <span>Wall</span>
+            <span className="hidden xs:inline">Wall</span>
           </Link>
 
-          <div className="bg-[#bef264] text-black font-black text-[10px] px-2.5 py-0.5 border border-black uppercase tracking-wider rounded-sm shadow-[2px_2px_0px_#000]">
+          <div className="bg-[#bef264] text-black font-black text-[9px] sm:text-[10px] px-2 sm:px-2.5 py-0.5 border border-black uppercase tracking-wider rounded-sm shadow-[2px_2px_0px_#000]">
             ⚡ ZERO IDENTITY LOGS
           </div>
         </div>
@@ -155,7 +155,7 @@ export default function ConfessForm() {
         <motion.h1
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-2xl sm:text-3xl font-black tracking-tight text-amber-50 uppercase"
+          className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-amber-50 uppercase"
         >
           Say It. Leave It.{" "}
           <span className="text-[#bef264] underline decoration-wavy decoration-[#fb7185]">
@@ -163,7 +163,7 @@ export default function ConfessForm() {
           </span>
         </motion.h1>
 
-        <p className="text-xs text-amber-100/70 mt-1 font-mono">
+        <p className="text-[11px] sm:text-xs text-amber-100/70 mt-1 font-mono">
           Write freely. Your IP and browser are never revealed to the public.
         </p>
       </div>
@@ -174,7 +174,7 @@ export default function ConfessForm() {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
-          className="relative w-full rounded-2xl p-4 sm:p-6 sticky-paper-shadow flex flex-col transition-colors duration-300 border-t-8 border-black/10 max-h-[58vh] sm:max-h-[52vh]"
+          className="relative w-full rounded-2xl p-4 sm:p-6 sticky-paper-shadow flex flex-col transition-colors duration-300 border-t-8 border-black/10 min-h-[220px] sm:min-h-[260px]"
           style={{
             backgroundColor: selectedColor,
             color: "#1e1e1e",
@@ -185,7 +185,7 @@ export default function ConfessForm() {
 
           {/* Attached Polaroid Photo Preview */}
           {photo && (
-            <div className="relative mb-2.5 self-start bg-white p-1.5 pb-2 rounded-xs shadow-[0_3px_8px_rgba(0,0,0,0.25)] border border-black/15 -rotate-1 max-w-[130px] sm:max-w-[150px] flex-shrink-0 group">
+            <div className="relative mb-2.5 self-start bg-white p-1.5 pb-2 rounded-xs shadow-[0_3px_8px_rgba(0,0,0,0.25)] border border-black/15 -rotate-1 max-w-[120px] sm:max-w-[150px] flex-shrink-0 group">
               <button
                 type="button"
                 onClick={() => setPhoto(null)}
@@ -215,21 +215,21 @@ export default function ConfessForm() {
             }
             maxLength={maxLength + 50}
             rows={photo ? 3 : 5}
-            className="w-full flex-1 bg-transparent resize-none border-none outline-none font-sticky text-xl sm:text-2xl text-slate-900 placeholder:text-slate-700/60 font-semibold leading-relaxed focus:ring-0 p-0 selection:bg-black/10 overflow-y-auto"
+            className="w-full flex-1 bg-transparent resize-none border-none outline-none font-sticky text-lg sm:text-xl md:text-2xl text-slate-900 placeholder:text-slate-700/60 font-semibold leading-relaxed focus:ring-0 p-0 selection:bg-black/10 overflow-y-auto"
             autoFocus
           />
 
           {/* Color Chooser, Photo Actions & Character Counter */}
           <div className="mt-3 pt-2.5 border-t border-black/10 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
             {/* Palette dots */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1 sm:gap-1.5">
               {COLOR_OPTIONS.map((c) => (
                 <button
                   key={c.hex}
                   type="button"
                   onClick={() => setSelectedColor(c.hex)}
                   title={c.label}
-                  className={`w-5 h-5 rounded-full border border-black/20 transition-transform ${
+                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-black/20 transition-transform cursor-pointer ${
                     selectedColor === c.hex
                       ? "scale-125 ring-2 ring-black/40 shadow-sm"
                       : "hover:scale-110 opacity-80"
@@ -245,24 +245,24 @@ export default function ConfessForm() {
                 type="button"
                 onClick={handleCameraTrigger}
                 title="Take photo with camera"
-                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all border border-black/15 active:scale-95 cursor-pointer ${
+                className={`inline-flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all border border-black/15 active:scale-95 cursor-pointer ${
                   photo
                     ? "bg-[#bef264] text-black border-black/40 shadow-xs"
                     : "bg-black/10 hover:bg-black/20 text-slate-900"
                 }`}
               >
                 <span>📸</span>
-                <span className="text-[11px]">{photo ? "Retake" : "Camera"}</span>
+                <span>{photo ? "Retake" : "Camera"}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 title="Upload photo from device"
-                className="inline-flex items-center gap-1 px-2.5 py-1 bg-black/10 hover:bg-black/20 text-slate-900 rounded-lg text-xs font-bold transition-all border border-black/15 active:scale-95 cursor-pointer"
+                className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-1 bg-black/10 hover:bg-black/20 text-slate-900 rounded-lg text-[11px] sm:text-xs font-bold transition-all border border-black/15 active:scale-95 cursor-pointer"
               >
                 <span>📁</span>
-                <span className="text-[11px]">Upload</span>
+                <span>Upload</span>
               </button>
 
               {/* Standard device file picker */}
@@ -286,7 +286,7 @@ export default function ConfessForm() {
             </div>
 
             {/* Character counter */}
-            <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-slate-800">
+            <div className="flex items-center gap-1 font-mono text-[11px] sm:text-xs font-bold text-slate-800">
               <span className={isOverLimit ? "text-rose-600 font-extrabold" : ""}>
                 {currentLength}
               </span>
@@ -304,15 +304,16 @@ export default function ConfessForm() {
         )}
 
         {/* Confess Button (Consistently styled as homepage "Stick Your Confession") */}
-        <div className="mt-3 flex justify-center flex-shrink-0">
+        <div className="mt-3 flex justify-center flex-shrink-0 w-full px-1">
           <MagneticButton
             onClick={handleSubmit}
             disabled={!canSubmit}
             loading={isSubmitting}
+            className="w-full sm:w-auto"
           >
-            <span className="text-2xl">✍️</span>
+            <span className="text-xl sm:text-2xl">✍️</span>
             <span>Stick Your Confession</span>
-            <span className="text-xs bg-black text-[#bef264] px-2 py-0.5 rounded-sm font-mono font-bold">
+            <span className="text-[10px] sm:text-xs bg-black text-[#bef264] px-1.5 sm:px-2 py-0.5 rounded-sm font-mono font-bold whitespace-nowrap">
               100% ANONYMOUS
             </span>
           </MagneticButton>

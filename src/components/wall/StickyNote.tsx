@@ -32,21 +32,21 @@ export default function StickyNote({ item, index, onOpenModal }: StickyNoteProps
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Dynamic sizing based on length
+  // Dynamic sizing based on length with consistent, substantial min-height
   const length = item.confession.length;
-  // Size classification: short (<120), medium (120-280), long (>280)
   const sizeClass =
     length < 120
-      ? "min-h-[160px] md:min-h-[170px] text-lg md:text-xl"
+      ? "min-h-[220px] sm:min-h-[240px] text-lg sm:text-xl md:text-2xl"
       : length < 280
-      ? "min-h-[200px] md:min-h-[220px] text-base md:text-lg"
-      : "min-h-[240px] md:min-h-[270px] text-sm md:text-base";
+      ? "min-h-[240px] sm:min-h-[260px] text-base sm:text-lg md:text-xl"
+      : "min-h-[260px] sm:min-h-[290px] text-sm sm:text-base md:text-lg";
 
-  // Persistent rotation based on id or item rotation
-  const baseRotation =
+  // Persistent rotation based on id or item rotation (dampened to avoid horizontal overflow on small phones)
+  const rawRotation =
     item.rotation !== undefined
       ? item.rotation
-      : ((index * 7) % 7) - 3.5;
+      : ((index * 5) % 5) - 2.5;
+  const baseRotation = Math.max(-2.5, Math.min(2.5, rawRotation));
 
   // Pin vs tape selector based on index
   const isPin = index % 3 === 0;
@@ -114,7 +114,7 @@ export default function StickyNote({ item, index, onOpenModal }: StickyNoteProps
         backfaceVisibility: "hidden",
       }}
       whileHover={{
-        scale: 1.035,
+        scale: 1.03,
         zIndex: 30,
         transition: { duration: 0.25, ease: [0.25, 1, 0.5, 1] },
       }}
@@ -123,7 +123,7 @@ export default function StickyNote({ item, index, onOpenModal }: StickyNoteProps
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
       onClick={() => onOpenModal?.(item)}
-      className={`group relative p-5 md:p-6 rounded-sm cursor-pointer select-none flex flex-col justify-between sticky-paper-shadow transition-shadow duration-300 ${sizeClass}`}
+      className={`group relative p-4 sm:p-5 md:p-6 rounded-sm cursor-pointer select-none flex flex-col justify-between sticky-paper-shadow transition-shadow duration-300 ${sizeClass}`}
     >
       {/* Tape Strip or Push Pin at the top */}
       <div className="absolute -top-3 left-1/2 -translate-x-1/2 pointer-events-none z-20">
@@ -177,9 +177,9 @@ export default function StickyNote({ item, index, onOpenModal }: StickyNoteProps
         </div>
       )}
 
-      {/* Confession Text (Handwritten font with line-clamp protection) */}
-      <div className="relative z-10 flex-1 pt-1">
-        <p className="font-sticky text-left font-semibold leading-snug break-words whitespace-pre-wrap selection:bg-black/10">
+      {/* Confession Text (Centered handwritten font) */}
+      <div className="relative z-10 flex-1 flex flex-col justify-center items-center py-2 sm:py-3 my-auto">
+        <p className="font-sticky text-center font-bold text-lg sm:text-xl md:text-2xl leading-relaxed sm:leading-snug break-words whitespace-pre-wrap selection:bg-black/10">
           {item.confession}
         </p>
       </div>

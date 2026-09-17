@@ -147,7 +147,7 @@ export default function CameraModal({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 select-none">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 select-none">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -162,7 +162,7 @@ export default function CameraModal({
             initial={{ opacity: 0, scale: 0.92, y: 15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 15 }}
-            className="relative z-10 w-full max-w-md bg-slate-900 border-2 border-white/10 rounded-3xl p-5 shadow-2xl overflow-hidden text-white flex flex-col"
+            className="relative z-10 w-full max-w-md max-h-[92dvh] bg-slate-900 border-2 border-white/10 rounded-3xl p-4 sm:p-5 shadow-2xl overflow-y-auto text-white flex flex-col"
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-3 border-b border-white/10 pb-2.5">
