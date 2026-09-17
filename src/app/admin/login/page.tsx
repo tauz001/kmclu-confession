@@ -1,17 +1,30 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-export default function AdminLoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlError = searchParams.get("error");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(
+    urlError === "Configuration"
+      ? "Authentication configuration notice: Missing or misconfigured AUTH_SECRET."
+      : urlError === "CredentialsSignin"
+      ? "Invalid admin email or password."
+      : urlError === "AccessDenied"
+      ? "Access denied: Unauthorized access."
+      : urlError
+      ? `Login notice: ${urlError}`
+      : ""
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +33,7 @@ export default function AdminLoginPage() {
 
     try {
       const res = await signIn("credentials", {
-        email,
+        email: email.trim(),
         password,
         redirect: false,
       });
@@ -98,7 +111,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-400 to-rose-400 text-slate-950 hover:opacity-95 shadow-lg shadow-amber-500/20 transition-all disabled:opacity-50"
+            className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-400 to-rose-400 text-slate-950 hover:opacity-95 shadow-lg shadow-amber-500/20 transition-all disabled:opacity-50 cursor-pointer"
           >
             {loading ? "Authenticating..." : "Sign In to Dashboard →"}
           </button>
@@ -114,5 +127,19 @@ export default function AdminLoginPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen w-full flex items-center justify-center p-4 text-slate-400 text-xs">
+          Loading login...
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

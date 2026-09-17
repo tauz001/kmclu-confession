@@ -10,6 +10,11 @@ const getHashedPassword = async () => {
 };
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  secret:
+    process.env.AUTH_SECRET ||
+    process.env.NEXTAUTH_SECRET ||
+    "kmclu-confessions-secure-jwt-auth-secret-key-2024",
+  trustHost: true,
   providers: [
     Credentials({
       name: "Admin Login",
@@ -95,6 +100,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   pages: {
     signIn: "/admin/login",
+    error: "/admin/login",
   },
   session: {
     strategy: "jwt",
