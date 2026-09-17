@@ -1,26 +1,208 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #17141f;
+  --foreground: #fef08a;
+  --font-handwriting: 'Caveat', cursive, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@theme {
+  --color-funky-lime: #bef264;
+  --color-funky-pink: #fb7185;
+  --color-funky-yellow: #facc15;
+  --color-funky-cyan: #38bdf8;
+  --color-funky-purple: #c084fc;
+  --color-funky-orange: #fb923c;
+}
+
+/* =========================================================
+   SOLID PAINTED TEXTURE WALL (Authentic Drywall & Roller Stipple)
+   ========================================================= */
+.wall-painted-texture {
+  background-color: #141722;
+  /* Authentic solid matte painted plaster & roller stipple coats */
+  background-image: 
+    /* Fine paint roller stipple (matte orange-peel wall texture) */
+    radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    radial-gradient(rgba(0, 0, 0, 0.22) 1.2px, transparent 1.2px),
+    /* Plaster & paint coat micro-grain */
+    radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    /* Vertical wall drywall roller sheen */
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025) 0%, transparent 40%),
+    /* Overhead gallery wall-wash lighting (simulates warm ceiling spotlight on painted wall) */
+    radial-gradient(circle at 50% -8%, rgba(254, 240, 138, 0.08) 0%, transparent 65%),
+    /* Deep painted wall shadow vignette at bottom & sides */
+    radial-gradient(ellipse at 50% 60%, transparent 45%, rgba(10, 12, 18, 0.8) 100%);
+  background-size: 5px 5px, 7px 7px, 12px 12px, 100% 100%, 100% 100%, 100% 100%;
+  background-position: 0 0, 2px 2px, 4px 4px, 0 0, 0 0, 0 0;
+  background-attachment: fixed;
+}
+
+/* Tactile Paint Stipple & Plaster Grain Overlay */
+.wall-paint-stipple {
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    radial-gradient(rgba(0, 0, 0, 0.18) 1px, transparent 1px);
+  background-size: 3px 3px, 6px 6px;
+  background-position: 0 0, 1.5px 1.5px;
+}
+
+/* =========================================================
+   CANONICAL CONSISTENT CONFESS BUTTON
+   ========================================================= */
+.btn-confess-main {
+  background-color: #bef264;
+  color: #000000;
+  font-weight: 900;
+  font-family: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2.5px solid #000000;
+  box-shadow: 4px 4px 0px #000000;
+  border-radius: 14px;
+  transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.btn-confess-main:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #000000;
+  background-color: #d9f99d;
+}
+
+.btn-confess-main:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #000000;
+}
+
+/* Secondary Neo-Brutalist Buttons */
+.btn-funky-pink {
+  background-color: #fb7185;
+  color: #ffffff;
+  font-weight: 900;
+  border: 2.5px solid #000000;
+  box-shadow: 4px 4px 0px #000000;
+  border-radius: 12px;
+  transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+}
+.btn-funky-pink:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #000000;
+  background-color: #f43f5e;
+}
+.btn-funky-pink:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.btn-funky-cyan {
+  background-color: #38bdf8;
+  color: #000000;
+  font-weight: 900;
+  border: 2.5px solid #000000;
+  box-shadow: 4px 4px 0px #000000;
+  border-radius: 12px;
+  transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+}
+.btn-funky-cyan:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #000000;
+  background-color: #7dd3fc;
+}
+.btn-funky-cyan:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.btn-funky-lime {
+  background-color: #bef264;
+  color: #000000;
+  font-weight: 900;
+  border: 2.5px solid #000000;
+  box-shadow: 4px 4px 0px #000000;
+  border-radius: 12px;
+  transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+}
+.btn-funky-lime:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #000000;
+  background-color: #d9f99d;
+}
+.btn-funky-lime:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #000000;
+}
+
+/* Sticky Note Shadows */
+.sticky-paper-shadow {
+  box-shadow: 
+    0 2px 0px rgba(0, 0, 0, 0.45),
+    4px 8px 16px rgba(0, 0, 0, 0.45),
+    0 18px 26px -4px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s ease;
+}
+
+.sticky-paper-shadow:hover {
+  box-shadow: 
+    0 3px 0px rgba(0, 0, 0, 0.55),
+    6px 14px 28px rgba(0, 0, 0, 0.55),
+    0 26px 40px -6px rgba(0, 0, 0, 0.7);
+}
+
+.tape-strip {
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  border-left: 2px dashed rgba(0, 0, 0, 0.3);
+  border-right: 2px dashed rgba(0, 0, 0, 0.3);
+}
+
+.push-pin {
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.65);
+}
+
+.font-sticky {
+  font-family: var(--font-caveat), 'Caveat', cursive, sans-serif;
+  letter-spacing: 0.01em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #110d17;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bef264;
+  border: 2px solid #110d17;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a3e635;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
